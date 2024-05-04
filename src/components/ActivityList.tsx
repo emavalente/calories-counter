@@ -1,13 +1,15 @@
 import { Activity } from "../types/index";
 import { categories } from "../data/categories";
-import { useMemo } from "react";
+import { Dispatch, useMemo } from "react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { ActivityActions } from "../reducers/activity-reducer";
 
 type ActivityListProps = {
   activities: Activity[];
+  dispatch: Dispatch<ActivityActions>;
 };
 
-function ActivityList({ activities }: ActivityListProps) {
+function ActivityList({ activities, dispatch }: ActivityListProps) {
   // Usamos useMemo para guardar el nombre de la categoria calculado segun su valor
   const categoryName = useMemo(
     () => (category: Activity["category"]) =>
@@ -41,7 +43,15 @@ function ActivityList({ activities }: ActivityListProps) {
           </div>
           <div className="flex gap-5 items-center">
             <button>
-              <PencilSquareIcon className="h-8 w-8 text-gray-800" />
+              <PencilSquareIcon
+                className="h-8 w-8 text-gray-800"
+                onClick={() =>
+                  dispatch({
+                    type: "set-activeId",
+                    payload: { id: activity.id },
+                  })
+                }
+              />
             </button>
           </div>
         </div>
