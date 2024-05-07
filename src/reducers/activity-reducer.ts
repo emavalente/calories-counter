@@ -6,16 +6,23 @@ export type ActivityState = {
   activeId: Activity["id"];
 };
 
+const localStorageActivities = (): Activity[] => {
+  const activities = localStorage.getItem("activities");
+  return activities ? JSON.parse(activities) : [];
+};
+
 // Aplicamos el tipo al estado inicial.
 export const initialState: ActivityState = {
-  activities: [],
+  activities: localStorageActivities(),
   activeId: "",
 };
 
-// Definimos un tipo para los actions, cada action es un objeto donde definimos el type y payload que recibirá.
+// Definimos un tipo para cada action, cada action es un objeto donde el type y payload que recibe con diferentes valores.
 export type ActivityActions =
   | { type: "save-activity"; payload: { newActivity: Activity } }
-  | { type: "set-activeId"; payload: { id: Activity["id"] } };
+  | { type: "set-activeId"; payload: { id: Activity["id"] } }
+  | { type: "remove-activity"; payload: { id: Activity["id"] } }
+  | { type: "restart-app" };
 
 // Definición del reducer
 export const activitytReducer = (
@@ -49,6 +56,22 @@ export const activitytReducer = (
     return {
       ...state,
       activeId: action.payload.id,
+    };
+  }
+
+  if (action.type === "remove-activity") {
+    return {
+      ...state,
+      activities: state.activities.filter(
+        (activity) => activity.id !== action.payload.id
+      ),
+    };
+  }
+
+  if (action.type === "restart-app") {
+    return {
+      activities: [],
+      activeId: "",
     };
   }
 
