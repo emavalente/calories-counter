@@ -6,12 +6,13 @@ export type ActivityState = {
   activeId: Activity["id"];
 };
 
+// Recupero los datos del localstorage
 const localStorageActivities = (): Activity[] => {
   const activities = localStorage.getItem("activities");
   return activities ? JSON.parse(activities) : [];
 };
 
-// Aplicamos el tipo al estado inicial.
+// Declaramos un estado inicial y aplicamos el tipo al estado inicial.
 export const initialState: ActivityState = {
   activities: localStorageActivities(),
   activeId: "",

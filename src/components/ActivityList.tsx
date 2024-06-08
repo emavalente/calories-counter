@@ -1,28 +1,16 @@
-import { Activity } from "../types/index";
-import { categories } from "../data/categories";
-import { Dispatch, useMemo } from "react";
 import { PencilSquareIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { ActivityActions } from "../reducers/activity-reducer";
+import { useActivity } from "../hooks/useActivity";
 
-type ActivityListProps = {
-  activities: Activity[];
-  dispatch: Dispatch<ActivityActions>;
-};
-
-function ActivityList({ activities, dispatch }: ActivityListProps) {
-  // Usamos useMemo para guardar el nombre de la categoria calculado segun su valor
-  const categoryName = useMemo(
-    () => (category: Activity["category"]) =>
-      categories.map((cat) => (cat.id === category ? cat.name : "")),
-    [activities]
-  );
+function ActivityList() {
+  const { state, dispatch, categoryName, isEmptyActivity } = useActivity();
+  const { activities } = state;
 
   return (
     <>
       <h2 className="text-4xl font-bold text-slate-600 text-center">
         Comida y Actividades
       </h2>
-      {activities.length > 0 ? (
+      {isEmptyActivity ? (
         activities.map((activity) => (
           <div
             key={activity.id}
